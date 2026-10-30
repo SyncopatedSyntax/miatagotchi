@@ -24,6 +24,17 @@
     A: ['#ffa425', 0], // amber marker
     L: ['#ff3b3b', 1], // tail light
     9: ['#e8323c', 0], // red side marker
+    '^': ['#3d3f50', 2], // ground shadow
+    '(': ['#9fdcc9', 0], // sky mint
+    ')': ['#f4a9c4', 0], // sky pink
+    '[': ['#ffc48e', 0], // sky peach
+    ']': ['#ffe58a', 0], // sunset sun
+    '{': ['#3f9fc4', 2], // sea
+    '}': ['#c8f0ff', 0], // sea sparkle
+    '_': ['#ecc98f', 0], // sand
+    ':': ['#7a5236', 1], // palm trunk
+    ';': ['#3cae5c', 2], // palm leaf
+    '|': ['#23824a', 1], // palm leaf shade
     1: ['#e3eaee', 1], // chrome rail (visible on LCD)
     2: ['#9a5b2e', 1], // wood
     3: ['#f2c230', 1], // gold trophy
@@ -180,7 +191,7 @@
     R: 1, r: 2, W: 0, k: 3, 5: 1, 6: 2, 7: 0, 8: 3, B: 0, b: 0, U: 0, u: 0, O: 1, F: 1, f: 1, E: 1, e: 2,
     N: 2, n: 2, Y: 0, I: 3, i: 2, G: 0, g: 1, T: 3, t: 2, S: 0, s: 2, c: 1, h: 1, A: 1, L: 2, 9: 2,
     Q: 0, q: 2, X: 3, x: 1, J: 2, j: 2, w: 0, '+': 1, '=': 2, '~': 1, a: 1, y: 2, p: 0, d: 2,
-    1: 2, 3: 1, 4: 0, M: 3, D: 3, K: 3, P: 0, z: 2, V: 3, v: 2, '@': 3, '#': 3,
+    1: 2, 3: 1, 4: 0, '^': 2, '(': 0, ')': 1, '[': 1, ']': 0, '{': 2, '}': 0, '_': 1, ':': 3, ';': 2, '|': 3, M: 3, D: 3, K: 3, P: 0, z: 2, V: 3, v: 2, '@': 3, '#': 3,
   };
   const shadeOf = (k) => SHADE[k] !== undefined ? SHADE[k] : FROM_LCD[(BASE[k] || [0, 0])[1]];
   function resolve(buf, mode, paintKey, bgColor, paint2Key) {

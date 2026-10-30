@@ -81,5 +81,46 @@
     for (let x = -off; x < 96; x += 16) b.hline(x, x + 7, oy + 60, night ? '=' : 'Y');
   }
 
-  G.UI = { ICONS, ICON_TINT, ICON_ORDER, ICON_LABEL, EMOTE, PROPS, background };
+  // ---- coast road at sunset, for the 128 x 88 play area ----
+  function coast(b, oy, t, night) {
+    const W = 128;
+    for (let y = 0; y < 34; y++) for (let x = 0; x < W; x++) {
+      let k;
+      if (night) k = y < 18 ? 'I' : ((y < 22 && (x + y) % 2) ? 'I' : 'M');
+      else if (y < 11) k = '(';
+      else if (y < 15) k = (x + y) % 2 ? '(' : ')';
+      else if (y < 23) k = ')';
+      else if (y < 26) k = (x + y) % 2 ? ')' : '[';
+      else k = '[';
+      b.set(x, oy + y, k);
+    }
+    if (night) {
+      [[9, 4], [27, 10], [44, 3], [66, 8], [83, 14], [101, 5], [118, 11], [56, 17], [14, 19]].forEach(([x, y], i) => b.set(x, oy + y, (t >> 3) % 3 === i % 3 ? 'u' : 'U'));
+      b.sprite(['.UUU.', 'UU...', 'UU...', 'UU...', '.UUU.'], 96, oy + 6);
+    } else {
+      for (let y = -9; y <= 0; y++) for (let x = -9; x <= 9; x++) if (x * x + y * y <= 81 && !(y > -5 && (y + 9) % 3 === 0)) b.set(94 + x, oy + 33 + y, ']');
+      const cx = (Math.floor(t / 8) % 170) - 30;
+      b.sprite(['...UUUU.....', '.UUUUUUUUU..', 'UUUUUUuUUUUU', '.uuuuuuuuuu.'], cx, oy + 6);
+      b.sprite(['..UUU...', 'UUUUUUU.', '.uuuuuu.'], ((cx + 85) % 170) - 20, oy + 15);
+    }
+    for (let y = 34; y < 44; y++) for (let x = 0; x < W; x++) b.set(x, oy + y, night ? 'M' : '{');
+    for (let i = 0; i < 9; i++) { const y = 35 + (i * 7) % 8, x = (i * 37 + (t >> 1) * (i % 2 ? 1 : -1)) % 140 - 6; b.hline(x, x + 3 + i % 3, oy + y, night ? '=' : '}'); }
+    for (let y = 44; y < 48; y++) for (let x = 0; x < W; x++) b.set(x, oy + y, night ? 'I' : ((x * 7 + y * 3) % 11 === 0 ? 'y' : '_'));
+    for (let y = 48; y < 88; y++) for (let x = 0; x < W; x++) b.set(x, oy + y, night ? 'M' : ((x * 5 + y * 3) % 17 === 0 ? 'n' : 'N'));
+    b.hline(0, W - 1, oy + 49, night ? '=' : 'P');
+    const off = (Math.floor(t / 2) * 3) % 20;
+    for (let x = -off; x < W; x += 20) b.hline(x, x + 9, oy + 86, night ? '=' : 'Y');
+    // palm tree
+    const trunk = night ? 'K' : ':', leaf = night ? 'K' : ';', dark = night ? 'K' : '|';
+    for (let y = 22; y < 50; y++) { const x = 118 - Math.round(Math.pow((y - 22) / 28, 2) * -3 + (y - 22) * 0.18); b.set(x, oy + y, trunk); b.set(x + 1, oy + y, trunk); if (y % 3 === 0) b.set(x, oy + y, dark); }
+    const sway = (t >> 3) % 2;
+    [[-1, 0], [1, 0], [-1, 1], [1, 1], [0, -1]].forEach(([dx, dy2], i) => {
+      for (let s = 1; s <= 9; s++) {
+        const x = 118 + dx * s + (dy2 < 0 ? (s % 2) : 0), y = oy + 22 + Math.round(dy2 * s * 0.7 + (s * s) / 14) - (dy2 < 0 ? s : 0) + (i < 2 ? sway : 0);
+        b.set(x, y, s % 3 === 0 ? dark : leaf); b.set(x, y + 1, dark);
+      }
+    });
+  }
+
+  G.UI = { ICONS, ICON_TINT, ICON_ORDER, ICON_LABEL, EMOTE, PROPS, background, coast };
 })(window);

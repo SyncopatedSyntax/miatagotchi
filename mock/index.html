@@ -88,8 +88,8 @@
   .frame canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edges; max-width: 100%; border-radius: 4px; }
   .cap { font-size: 14px; color: var(--muted); }
   .cap b { color: var(--ink); font-weight: 700; }
-  .faces { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
-  @media (min-width: 701px) { .faces { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
+  .faces { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  @media (min-width: 701px) { .faces { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
   .faces figure { margin: 0; display: grid; gap: 4px; justify-items: center; }
   .faces figcaption { font: 700 10px var(--font-pixel); color: var(--muted); letter-spacing: .06em; }
   .timeline { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
@@ -114,7 +114,7 @@
   <header>
     <div class="eyebrow">Main screen mock-up · v0 · not final</div>
     <h1>MIATA<span>GOTCHI</span></h1>
-    <p class="lede">A pocket NA roadster that grows by getting modded. Tap the screen, press A, B and C, or tap the car to see its face. Switch the screen between color and mono below.</p>
+    <p class="lede">A pocket NA roadster that grows by getting modded. Tap the screen, press A, B and C, or tap the car to make it wink. Switch the screen between color and mono below.</p>
   </header>
 
   <section class="stage" aria-label="Main screen">
@@ -160,7 +160,7 @@
       <ol class="try">
         <li><b>Icons:</b> fuel, drive, garage, fix / wash, gauges, mods, check engine.</li>
         <li><b>A</b> moves the cursor, <b>B</b> selects, <b>C</b> goes back.</li>
-        <li>Tap the car to see its face and a pop-up wink.</li>
+        <li>Tap the car: it winks, then grins.</li>
         <li>Wait about 15 seconds: it drips oil and the check-engine light blinks.</li>
         <li><b>Garage</b> puts it to sleep. The pop-ups on the shell fold down too.</li>
       </ol>
@@ -171,12 +171,16 @@
   <section class="block" aria-labelledby="h-car">
     <div class="eyebrow">Sprite sheet</div>
     <h2 id="h-car">The car up close</h2>
-    <p class="lede">Side view on a 64 × 24 pixel grid with separate wheel sprites, so every mod is a layer. The front view is the face: the pop-up headlights are the eyes and the air intake is the grin.</p>
+    <p class="lede">The pet is a cute 3/4 front view on an 84 × 44 pixel grid, nose to the left, drawn from your reference. The pop-up headlights are the eyes and the air intake is the grin. Wheels, ride height, wings, racks and lights are layers on the same body, so every build reuses it.</p>
     <div class="sheet">
       <div class="frame"><canvas id="bigColor"></canvas><p class="cap"><b>Color on.</b> Limited palette built from NA factory paints.</p></div>
       <div class="frame"><canvas id="bigLcd"></canvas><p class="cap"><b>Color off.</b> 4-shade LCD in the Game Boy style, with dot gaps and a faint segment shadow.</p></div>
     </div>
-    <div class="frame"><div class="faces" id="faces"></div><p class="cap"><b>Expressions.</b> Pop-ups up, down, a wink, happy, sleepy, and broken down.</p></div>
+    <div class="frame"><div class="faces" id="faces"></div><p class="cap"><b>Expressions.</b> Awake, asleep with the top up, a wink, happy, sleepy, and broken down.</p></div>
+    <div class="frame">
+      <div class="sheet"><div><canvas id="sideColor"></canvas></div><div><canvas id="sideLcd"></canvas></div></div>
+      <p class="cap"><b>Side view</b> for driving and meetups, still in the first style. Next it gets the same cute pass, plus a top-down car for autocross and the mods screen and a straight-on face for close-ups.</p>
+    </div>
   </section>
 
   <section class="block" aria-labelledby="h-grow">
@@ -214,5 +218,6 @@
 <script src="js/art-car.js"></script>
 <script src="js/art-mods.js"></script>
 <script src="js/art-ui.js"></script>
+<script src="js/art-34.js"></script>
 <script src="js/game.js"></script>
 <script src="js/page.js"></script>

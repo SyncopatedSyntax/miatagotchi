@@ -2,7 +2,7 @@
 (function () {
   'use strict';
   const { Buffer, PAINTS, present } = PX;
-  const { drawCar, BUILDS, tarp, face } = ART;
+  const { drawCar, BUILDS } = ART;
   const S = GAME.S;
   const $ = (id) => document.getElementById(id);
   const dpr = () => window.devicePixelRatio || 1;
@@ -106,13 +106,16 @@
 
   function renderSheets() {
     const mode = S.mode;
-    const daily = Object.assign({}, BUILDS.daily, { lights: 'up' });
-    paintStatic($('bigColor'), carBuf(daily), 'color', S.paint);
-    paintStatic($('bigLcd'), carBuf(daily), 'lcd', S.paint);
+    const big = new Buffer(CAR34.W + 4, CAR34.H + 2); big.sprite(CAR34.car({ eyes: 'up' }), 2, 1);
+    paintStatic($('bigColor'), big, 'color', S.paint);
+    paintStatic($('bigLcd'), big, 'lcd', S.paint);
+    const side = Object.assign({}, BUILDS.daily, { lights: 'up' });
+    paintStatic($('sideColor'), carBuf(side), 'color', S.paint);
+    paintStatic($('sideLcd'), carBuf(side), 'lcd', S.paint);
 
     const faces = $('faces');
     if (!faces.children.length) {
-      [['open', 'smile', 'awake'], ['closed', 'flat', 'asleep'], ['wink', 'smile', 'wink'], ['happy', 'open', 'happy'], ['sleepy', 'flat', 'tired'], ['x', 'open', 'broke down']]
+      [['up', 'smile', 'awake'], ['down', 'flat', 'asleep'], ['wink', 'smile', 'wink'], ['happy', 'open', 'happy'], ['half', 'flat', 'sleepy'], ['x', 'flat', 'broke down']]
         .forEach(([e, m, l]) => {
           const f = document.createElement('figure');
           const c = document.createElement('canvas'); c.dataset.eyes = e; c.dataset.mouth = m;
@@ -121,7 +124,8 @@
         });
     }
     faces.querySelectorAll('canvas').forEach((c) => {
-      const b = new Buffer(44, 30); face(b, 2, 2, { eyes: c.dataset.eyes, mouth: c.dataset.mouth });
+      const b = new Buffer(CAR34.W + 4, CAR34.H + 2);
+      b.sprite(CAR34.car({ eyes: c.dataset.eyes, mouth: c.dataset.mouth, top: c.dataset.eyes === 'down' ? 'soft' : 'down' }), 2, 1);
       paintStatic(c, b, mode, S.paint);
     });
 
@@ -134,10 +138,10 @@
           fr.innerHTML = '<canvas data-k="' + k + '"></canvas><h3>' + t + '</h3><p class="cap">' + d + '</p>';
           tl.appendChild(fr);
         });
-      [['race', 'Track', 'Autocross wins, canyon runs, track days.', 'Roll bar, GT wing, splitter, number roundel, tow hook.'],
-        ['stance', 'Stance', 'Car meets, photo shoots, polishing.', 'Air ride, deep-dish wheels, hardtop, tsurikawa ring.'],
-        ['offroad', 'Safari', 'Dirt roads, camping trips, getting muddy.', 'Lift, mud tires, light bar, snorkel, spare on the trunk.'],
-        ['collector', 'Concours', 'Washing, garage nights, keeping it original.', 'Tan top, chrome trunk rack, wood wheel, factory wheels.']]
+      [['race', 'Track', 'Autocross wins, canyon runs, track days.', 'Roll bar, GT wing, stripes, splitter, number roundel, tow hook.'],
+        ['stance', 'Stance', 'Car meets, photo shoots, polishing.', 'Air ride, deep-dish wheels, windshield banner, tsurikawa ring.'],
+        ['offroad', 'Safari', 'Dirt roads, camping trips, getting muddy.', 'Lift, mud tires, flares, light bar, snorkel, spare on the trunk.'],
+        ['collector', 'Concours', 'Washing, garage nights, keeping it original.', 'Tan boot, chrome trunk rack, wood wheel, factory wheels.']]
         .forEach(([k, t, earn, parts]) => {
           const fr = document.createElement('div'); fr.className = 'frame path';
           fr.innerHTML = '<canvas data-k="' + k + '"></canvas><h3>' + t + '</h3><p class="cap"><b>Parts:</b> ' + parts + '</p><p class="tag">GROWS FROM: ' + earn.toUpperCase() + '</p>';
@@ -146,10 +150,9 @@
     }
     document.querySelectorAll('#timeline canvas, #paths canvas').forEach((c) => {
       const k = c.dataset.k;
-      const b = new Buffer(72, 32);
-      if (k === 'egg') tarp(b, 4, 6, 0);
-      else drawCar(b, 4, 6, Object.assign({}, BUILDS[k]), 0);
-      const paint = k === 'beater' ? 'fadedRed' : (BUILDS[k] && BUILDS[k].paint) || S.paint;
+      const b = new Buffer(CAR34.W + 4, CAR34.H + 2);
+      b.sprite(k === 'egg' ? CAR34.tarp(0) : CAR34.car(CAR34.BUILDS[k]), 2, 1);
+      const paint = k === 'beater' ? 'fadedRed' : (CAR34.BUILDS[k] && CAR34.BUILDS[k].paint) || S.paint;
       paintStatic(c, b, mode, (k === 'daily' || k === 'project') ? S.paint : paint);
     });
 

@@ -48,7 +48,8 @@ A pocket NA Miata that lives on your phone. It starts as a barn find under a tar
 
 ### The screen
 
-- A small logical canvas (about 96 × 88 pixels: a 96 × 64 play area plus an icon row above and below), scaled up by whole device pixels so every pixel stays square and sharp.
+- A small logical canvas (128 × 112 pixels: a 128 × 88 play area plus an icon row above and below), scaled up by whole device pixels so every pixel stays square and sharp.
+- The home scene is a coast road at sunset: sea, palm tree, road. It turns to night with stars and a moon while the car sleeps.
 - Every sprite is palette-indexed: each pixel stores a palette key, not a color. The same sprite renders in **Color** (a limited palette built around NA factory paints) and in **Mono** (4 greens: `#d3dcb2`, `#99ad7e`, `#57704f`, `#1f3326`) with dot-matrix gaps and a faint segment shadow.
 - The screen ticks at 8 frames per second for the pet, like an LCD toy. Mini-games run smoother.
 
@@ -56,7 +57,7 @@ A pocket NA Miata that lives on your phone. It starts as a barn find under a tar
 
 | View | Used for | Art needed |
 | --- | --- | --- |
-| 3/4 front | Home screen, most of the time | Every part |
+| 3/4 front | Home screen, most of the time. Nose to the left, mirrored when it turns around. Drawn from the owner's reference picture on an 84 × 44 grid. | Every part |
 | Side | Drive animation, Canyon run, meetups | Every part |
 | Front face | Petting, big reactions, sickness | Parts that change the face (lights, lips, bull bars) |
 | Top-down | Autocross, mods screen | Simplified parts |
@@ -314,7 +315,10 @@ mock/         the v0 mock-up, kept for reference
 
 ## 11. Still open
 
-- **Your reference picture** for the cute 3/4 style, including which way the car faces.
-- Default bedtime, and whether weekends get a later one.
-- Blends beyond Rally and Drift: add more now or later?
-- Cash: one currency for everything (parts choices, repaints, rescues), or separate tokens for parts?
+Proposed defaults, used unless you say otherwise:
+
+- **Bedtime:** 10 pm to 7 am on weeknights, 11 pm to 8 am on Friday and Saturday, adjustable in Settings.
+- **Blends:** Rally and Drift in v1; more (such as a Concours + Track restomod) later.
+- **Money:** one currency, cash, for part choices, repaints and junkyard rescues.
+
+Art still to do: the side view gets the same cute pass as the 3/4 view, plus a new top-down car and a straight-on face.
