@@ -1,6 +1,6 @@
 /* Miatagotchi mock: tiny palette-indexed pixel engine.
    Scenes are drawn into a buffer of single-char palette keys, then
-   resolved per display mode: full color, or 1-bit LCD (ink / paper / dither). */
+   resolved per display mode: full color, or a 4-shade Game Boy style LCD. */
 (function (G) {
   'use strict';
 
@@ -23,7 +23,7 @@
     h: ['#fff1a0', 3], // headlight beam
     A: ['#ffa425', 0], // amber marker
     L: ['#ff3b3b', 1], // tail light
-    l: ['#e8323c', 0], // red side marker
+    9: ['#e8323c', 0], // red side marker
     1: ['#e3eaee', 1], // chrome rail (visible on LCD)
     2: ['#9a5b2e', 1], // wood
     3: ['#f2c230', 1], // gold trophy
@@ -86,7 +86,7 @@
     montego:      { name: 'Montego Blue',    R: '#1d4c8f', r: '#123565', W: '#4f7fc4', k: '#0a1e3e' },
   };
 
-  const LCD = { paper: '#c4ccb0', ink: '#252d27', ghost: 'rgba(37,45,39,0.09)', shadow: 'rgba(37,45,39,0.16)', grid: 'rgba(160,170,140,0.55)' };
+  const LCD = { paper: '#d3dcb2', ink: '#252d27', ghost: 'rgba(37,45,39,0.09)', shadow: 'rgba(37,45,39,0.16)', grid: 'rgba(160,170,140,0.55)' };
 
   function hexToRgb(h) {
     const n = parseInt(h.slice(1), 16);
@@ -172,6 +172,17 @@
   // ---------- resolve + present ----------
   // mode: 'color' | 'lcd'. paint: PAINTS key. Returns ImageData-sized RGBA + LCD ink mask.
   const ALT = { 5: 'R', 6: 'r', 7: 'W', 8: 'k' };
+  // 4-shade LCD, Game Boy style: 0 lightest .. 3 darkest
+  const GB = ['#d3dcb2', '#99ad7e', '#57704f', '#1f3326'];
+  const GB_RGB = GB.map(hexToRgb);
+  const FROM_LCD = [0, 3, 2, 1, 1];
+  const SHADE = {
+    R: 1, r: 2, W: 0, k: 3, 5: 1, 6: 2, 7: 0, 8: 3, B: 0, b: 0, U: 0, u: 0, O: 1, F: 1, f: 1, E: 1, e: 2,
+    N: 2, n: 2, Y: 0, I: 3, i: 2, G: 0, g: 1, T: 3, t: 2, S: 0, s: 2, c: 1, h: 1, A: 1, L: 2, 9: 2,
+    Q: 0, q: 2, X: 3, x: 1, J: 2, j: 2, w: 0, '+': 1, '=': 2, '~': 1, a: 1, y: 2, p: 0, d: 2,
+    1: 2, 3: 1, 4: 0, M: 3, D: 3, K: 3, P: 0, z: 2, V: 3, v: 2, '@': 3, '#': 3,
+  };
+  const shadeOf = (k) => SHADE[k] !== undefined ? SHADE[k] : FROM_LCD[(BASE[k] || [0, 0])[1]];
   function resolve(buf, mode, paintKey, bgColor, paint2Key) {
     const paint = PAINTS[paintKey] || PAINTS.classicRed;
     const paint2 = PAINTS[paint2Key] || paint;
@@ -183,17 +194,9 @@
       const key = buf.k[i];
       let c;
       if (mode === 'lcd') {
-        let v = 0;
-        if (key) {
-          if ('RrW567'.includes(key)) v = 0;
-          else if (key === 'k' || key === '8') v = 1;
-          else v = (BASE[key] || [0, 0])[1];
-        }
-        if (v === 2) v = (x + y) & 1 ? 1 : 0;
-        else if (v === 3) v = ((x & 1) && !(y & 1)) ? 1 : 0;
-        if (v === 1) { c = LCD_INK; ink[i] = 1; }
-        else if (v === 4) c = LCD_GHOST;
-        else c = LCD_PAPER;
+        const sh = key ? shadeOf(key) : 0;
+        c = GB_RGB[sh];
+        if (sh >= 2) ink[i] = 1;
       } else {
         if (!key) c = bg;
         else if (paint[key] && 'RrWk'.includes(key)) c = rgb(paint[key]);
@@ -219,18 +222,13 @@
     const sctx = small.getContext('2d');
     sctx.putImageData(new ImageData(res.data, buf.w, buf.h), 0, 0);
     if (mode === 'lcd') {
-      ctx.fillStyle = LCD.paper; ctx.fillRect(0, 0, W, H);
+      ctx.drawImage(small, 0, 0, W, H);
       // segment shadow cast onto the reflective backing
       const off = Math.max(1, Math.round(scale * 0.28));
       ctx.fillStyle = LCD.shadow;
       for (let y = 0; y < buf.h; y++) for (let x = 0; x < buf.w; x++) {
         if (res.ink[y * buf.w + x]) ctx.fillRect(x * scale + off, y * scale + off, scale, scale);
       }
-      // draw paper-transparent version so the shadow shows through paper pixels
-      const d = res.data;
-      for (let i = 0; i < res.ink.length; i++) if (!res.ink[i]) d[i * 4 + 3] = 0;
-      sctx.putImageData(new ImageData(d, buf.w, buf.h), 0, 0);
-      ctx.drawImage(small, 0, 0, W, H);
       // dot-matrix gaps
       if (scale >= 4) {
         ctx.fillStyle = LCD.grid;

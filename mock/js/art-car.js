@@ -73,7 +73,7 @@
     put(g, 28, 11, 'k'); put(g, 29, 11, 'k');
     // tail light + side markers
     put(g, 1, 11, 'L'); put(g, 1, 12, 'L');
-    put(g, 2, 15, 'l'); put(g, 3, 15, 'l');
+    put(g, 2, 15, '9'); put(g, 3, 15, '9');
     put(g, 60, 15, 'A'); put(g, 61, 15, 'A');
     // front lower lip (black)
     hl(g, 57, 61, 18, 'M');

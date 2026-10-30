@@ -171,8 +171,7 @@
 
   function renderMeet(canvas, mode) {
     const W = 150, H = 46, b = new Buffer(W, H);
-    if (mode === 'color') { b.rect(0, 0, W, 34, 'b'); b.rect(0, 34, W, 12, 'N'); for (let x = 70; x < 80; x++) b.set(x, 41, 'Y'); }
-    else { for (let x = 0; x < W; x++) b.set(x, 39, 'K'); }
+    b.rect(0, 0, W, 34, 'b'); b.rect(0, 34, W, 12, 'N'); for (let x = 70; x < 80; x++) b.set(x, 41, 'Y');
     const left = new Buffer(72, 30), right = new Buffer(72, 30);
     drawCar(left, 4, 2, Object.assign({}, BUILDS.daily, { lights: 'up' }), 0);
     drawCar(right, 4, 2, Object.assign({}, BUILDS.stance, { lights: 'up', alt: true }), 0);

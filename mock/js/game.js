@@ -118,7 +118,7 @@
 
   function drawMain() {
     const night = S.asleep;
-    background(buf, S.mode, PY, S.action && S.action.type === 'drive' ? S.t * 3 : S.t, night);
+    background(buf, 'color', PY, S.action && S.action.type === 'drive' ? S.t * 3 : S.t, night);
     S.puddles.forEach(px => buf.sprite(EMOTE.oil, px, CAR_Y + 23));
     const a = S.action, f = a ? S.t - a.t0 : 0;
     let px = S.x;
@@ -133,7 +133,7 @@
     if (S.asleep) {
       for (let i = 0; i < 3; i++) {
         const k = (S.t + i * 8) % 24;
-        buf.text('Z', S.x + 44 + i * 4 + (k >> 3), CAR_Y - 2 - k, S.mode === 'color' ? 'U' : 'K');
+        buf.text('Z', S.x + 44 + i * 4 + (k >> 3), CAR_Y - 2 - k, 'U');
       }
     }
     if (!a) return;
@@ -148,7 +148,7 @@
     }
     if (a.type === 'drive') {
       if (f < 6) { emote('puff', tailX() - 4 - f * 2, CAR_Y + 14); emote('puff', tailX() - 8 - f, CAR_Y + 11); }
-      if (f >= 6 && f < 22) for (let i = 0; i < 6; i++) { const y = PY + 6 + i * 9, x0 = (i * 37 + f * 11) % 120 - 20; buf.hline(x0, x0 + 9, y, S.mode === 'color' ? 'U' : 'K'); }
+      if (f >= 6 && f < 22) for (let i = 0; i < 6; i++) { const y = PY + 6 + i * 9, x0 = (i * 37 + f * 11) % 120 - 20; buf.hline(x0, x0 + 9, y, S.mode === 'color' ? 'U' : 'q'); }
       if (f >= 14 && f < 24) buf.text('VROOM!', 30, PY + 22, 'K');
       if (f >= 26) { emote('note', ex, ey - (f - 26)); emote('note2', ex + 10, ey + 3 - (f - 26)); }
     }
